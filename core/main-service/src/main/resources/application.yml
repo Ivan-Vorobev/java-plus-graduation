@@ -1,42 +1,24 @@
-server:
-  port: 8080
-  servlet:
-    encoding:
-      force: true
-      charset: UTF-8
-
-client:
-  url: http://localhost:9090
-
 spring:
-  jackson:
-    date-format: "yyyy-MM-dd HH:mm:ss"  # Глобальный формат для java.util.Date
-    serialization:
-      write-dates-as-timestamps: false
-    default-property-inclusion: non_null  # Игнорирует null-поля
-  jpa:
-    hibernate.ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-        connection:
-          read_only: false
-  sql.init.mode: always
-  datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6432/ewm
-    username: ewm-main
-    password: ewm-main
+  application:
+    name: main-service
+  config:
+    import: "configserver:"
+  cloud:
+    config:
+      fail-fast: true
+      retry:
+        useRandomPolicy: true
+        max-interval: 6000
+      discovery:
+        enabled: true
+        serviceId: config-server
 
-logging:
-  level:
-    org:
-      springframework:
-        web: DEBUG
-        http:
-          converter: TRACE
-        orm:
-          jpa: INFO
-          jpa.JpaTransactionManager: INFO
-        transaction: INFO
-        transaction.interceptor: INFO
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname:localhost}:${eureka.instance.port:8761}/eureka/
+    instance:
+      preferIpAddress: true
+      hostname: localhost
+      instance-id: "${spring.application.name}:${random.value}"
+      lease-renewal-interval-in-seconds: 10
