@@ -15,7 +15,8 @@
         <module>core</module>
 		<module>infra</module>
 		<module>stats</module>
-	</modules>
+        <module>core/request-service</module>
+    </modules>
 
     <groupId>ru.yandex.practicum</groupId>
 	<artifactId>java-plus-graduation</artifactId>

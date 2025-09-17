@@ -31,7 +31,7 @@ import java.util.Optional;
 @Setter
 @Slf4j
 public class BaseClient {
-    @Value("${stats-client.server-url:http://localhost:9090}")
+    @Value("${stats-client.server-url:stats-server}")
     private String serverDiscoveryUrlName;
     @Autowired
     private ObjectMapper objectMapper;
