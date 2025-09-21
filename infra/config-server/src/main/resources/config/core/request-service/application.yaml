@@ -1,0 +1,51 @@
+server:
+  port: 0
+  servlet:
+    encoding:
+      force: true
+      charset: UTF-8
+
+stats-client:
+  server-url: stats-server
+
+spring:
+  jackson:
+    date-format: "yyyy-MM-dd HH:mm:ss"  # Глобальный формат для java.util.Date
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null  # Игнорирует null-поля
+  jpa:
+    hibernate.ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        connection:
+          read_only: false
+  sql.init.mode: always
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:6432/ewm
+    username: ewm-main
+    password: ewm-main
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        http:
+          converter: TRACE
+        orm:
+          jpa: INFO
+          jpa.JpaTransactionManager: INFO
+        transaction: INFO
+        transaction.interceptor: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info
+  info:
+    env:
+      enabled: true
