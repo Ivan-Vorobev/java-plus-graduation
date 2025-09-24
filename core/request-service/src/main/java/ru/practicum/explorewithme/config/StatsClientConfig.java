@@ -2,20 +2,18 @@ package ru.practicum.explorewithme.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.yandex.practicum.client.hit.HitClient;
-import ru.yandex.practicum.client.stats.StatsClient;
-
+import ru.yandex.ewm.AnalyzerClient;
+import ru.yandex.ewm.CollectorClient;
 
 @Configuration
 public class StatsClientConfig {
-
     @Bean
-    public HitClient hitClient() {
-        return new HitClient();
+    public CollectorClient collectorClient() {
+        return new CollectorClient();
     }
 
     @Bean
-    public StatsClient statsClient() {
-        return new StatsClient();
+    public AnalyzerClient analyzerClient() {
+        return new AnalyzerClient();
     }
 }

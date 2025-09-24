@@ -7,6 +7,7 @@ import ru.practicum.explorewithme.dto.UserParticipationRequestDto;
 import ru.practicum.explorewithme.model.RequestStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RequestService {
     List<ParticipationRequestDto> findAllRequestsByUserId(long userId);
@@ -20,4 +21,6 @@ public interface RequestService {
     UserParticipationRequestDto patchRequestStatus(ChangeRequestStatusDto changeRequestStatusDto, long userId, long eventId);
 
     List<EventRequestCountDto> findEventsCountByStatus(List<Long> eventIds, RequestStatus status);
+
+    Optional<ParticipationRequestDto> findByRequesterIdAndEventId(Long userId, Long eventId);
 }

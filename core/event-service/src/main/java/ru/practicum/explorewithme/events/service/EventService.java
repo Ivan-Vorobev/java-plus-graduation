@@ -1,6 +1,5 @@
 package ru.practicum.explorewithme.events.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import ru.practicum.explorewithme.events.dto.AdminEventParams;
 import ru.practicum.explorewithme.events.dto.EventDto;
 import ru.practicum.explorewithme.events.dto.NewEventDto;
@@ -28,9 +27,11 @@ public interface EventService {
 
     List<EventDto> findAllByUserParams(UserEventParams userEventParams);
 
-    void sendHit(HttpServletRequest request);
-
     EventDto findPublishedEvent(Long eventId);
 
     void incrementParticipantCnt(Long eventId, Integer increment, EventRequestCountAction action);
+
+    List<EventDto> getRecommendations(long userId, int maxResults);
+
+    void likeEvent(Long userId, Long eventId);
 }

@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.dto.*;
 import ru.practicum.explorewithme.enumeration.EventRequestCountAction;
@@ -17,9 +18,11 @@ import ru.practicum.explorewithme.repository.RequestRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.practicum.explorewithme.exception.NotFoundException.notFoundException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService {
@@ -141,6 +144,16 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<EventRequestCountDto> findEventsCountByStatus(List<Long> eventIds, RequestStatus status) {
         return EventRequestMapper.mapToDTO(requestRepository.findEventsCountByStatus(eventIds, status));
+    }
+
+    @Override
+    public Optional<ParticipationRequestDto> findByRequesterIdAndEventId(Long userId, Long eventId) {
+        Optional<ParticipationRequest> requestOpt = requestRepository.findByRequesterIdAndEventId(userId, eventId);
+        if (requestOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        ParticipationRequestDto dto = ParticipationRequestMapper.mapToDTO(requestOpt.get());
+        return Optional.of(dto);
     }
 
     private void checkOnNotPublishedEvent(EventDto event) {
