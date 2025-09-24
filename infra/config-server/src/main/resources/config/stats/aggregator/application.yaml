@@ -1,0 +1,30 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+logging:
+  level:
+    ru.yandex.practicum.telemetry: TRACE
+    org:
+      springframework: ERROR
+      apache.kafka: WARN
+aggregator:
+  kafka:
+    producer:
+      properties:
+        bootstrap.servers: localhost:9092
+        client.id: "stats.aggregator"
+        key.serializer: org.apache.kafka.common.serialization.LongSerializer
+        value.serializer: ru.practicum.ewm.stats.avro.serializer.AvroSerializer
+        linger.ms: 0
+    consumer:
+      properties:
+        client.id: "stats.aggregator.consumer"
+        group.id: "stats.aggregator.group"
+        auto.offset.reset: latest
+        bootstrap.servers: localhost:9092
+        key.deserializer: org.apache.kafka.common.serialization.LongDeserializer
+        value.deserializer: ru.practicum.ewm.stats.avro.deserializer.UserActionAvroDeserializer
+    topics:
+      user-actions: stats.user-actions.v1
+      events-similarity: stats.events-similarity.v1

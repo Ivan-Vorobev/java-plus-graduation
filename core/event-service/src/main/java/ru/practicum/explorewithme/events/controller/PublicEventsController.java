@@ -1,6 +1,5 @@
 package ru.practicum.explorewithme.events.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -8,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.events.dto.EventDto;
 import ru.practicum.explorewithme.events.dto.UserEventParams;
 import ru.practicum.explorewithme.events.service.EventService;
+import ru.yandex.ewm.CollectorClient;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,10 +19,10 @@ import java.util.Optional;
 public class PublicEventsController {
 
     private final EventService eventService;
+    private final CollectorClient collectorClient;
 
     @GetMapping
     public List<EventDto> getEvents(
-            HttpServletRequest request,
             @RequestParam(required = false) String text,
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) Boolean paid,
@@ -46,16 +46,25 @@ public class PublicEventsController {
                 .size(size)
                 .build();
 
-        eventService.sendHit(request);
         return eventService.findAllByUserParams(userEventParams);
     }
 
     @GetMapping("/{eventId}")
     public EventDto getPublishedEvent(
-            HttpServletRequest request,
-            @NotNull @PathVariable Long eventId
+            @NotNull @PathVariable Long eventId,
+            @RequestHeader("X-EWM-USER-ID") long userId
     ) {
-        eventService.sendHit(request);
+        collectorClient.sendView(userId, eventId);
         return eventService.findPublishedEvent(eventId);
+    }
+
+    @GetMapping("/recommendations")
+    public List<EventDto> getRecommendations(@RequestHeader("X-EWM-USER-ID") long userId, @RequestParam int maxResults) {
+        return eventService.getRecommendations(userId, maxResults);
+    }
+
+    @PutMapping("/{eventId}/like")
+    public void likeEvent(@PathVariable long eventId, @RequestHeader("X-EWM-USER-ID") long userId) {
+        eventService.likeEvent(userId, eventId);
     }
 }
